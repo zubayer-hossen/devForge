@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    @apply min-h-screen bg-slate-50 font-sans text-slate-700 antialiased dark:bg-navy-900 dark:text-slate-300;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 { @apply font-bn text-slate-900 dark:text-white; }
+  ::selection { @apply bg-brand-500/30; }
+  :focus-visible { @apply outline-none ring-2 ring-brand-400 ring-offset-2 ring-offset-white dark:ring-offset-navy-900; }
+}
