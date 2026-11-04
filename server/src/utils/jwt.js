@@ -39,7 +39,7 @@ export const verifyRefreshToken = (t) =>
 const cookieBase = () => ({
   httpOnly: true,
   secure: env.isProd,
-  sameSite: env.isProd ? "none" : "lax",
+  sameSite: "lax",
 });
 
 export function setAuthCookies(res, accessToken, refreshToken) {
