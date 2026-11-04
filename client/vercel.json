@@ -6,7 +6,11 @@
       "destination": "https://devforge-m002.onrender.com/api/:path*"
     },
     {
-      "source": "/(.*)",
+      "source": "/socket.io/:path*",
+      "destination": "https://devforge-m002.onrender.com/socket.io/:path*"
+    },
+    {
+      "source": "/((?!api/|socket.io/).*)",
       "destination": "/index.html"
     }
   ]
