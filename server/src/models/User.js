@@ -76,6 +76,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.index({ fullName: "text", username: "text", email: "text" });
+userSchema.index({ status: 1, role: 1, points: 1 });
 
 userSchema.methods.toSafeJSON = function toSafeJSON() {
   const o = this.toObject();

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { BookOpen, ClipboardList, FolderGit2, History, Megaphone, LayoutDashboard, Layers, Mail, Settings, UserPlus, Users } from 'lucide-react';
 import AppShell from '../components/common/AppShell';
@@ -21,7 +20,6 @@ const nav = [
 ];
 
 export default function AdminLayout() {
-  const { pathname } = useLocation();
   const user = useSelector((s) => s.auth.user);
   const [pending, setPending] = useState(0);
   const [pendingSubs, setPendingSubs] = useState(0);
@@ -29,7 +27,7 @@ export default function AdminLayout() {
   const refreshCounts = useCallback(() => {
     adminApi.counts().then((c) => { setPending(c.pendingApplications); setPendingSubs(c.pendingSubmissions); }).catch(() => {});
   }, []);
-  useEffect(() => { refreshCounts(); }, [pathname, refreshCounts]);
+  useEffect(() => { refreshCounts(); }, [refreshCounts]);
 
   const items = nav.filter((n) => !n.superOnly || user?.role === 'SUPER_ADMIN');
   return (

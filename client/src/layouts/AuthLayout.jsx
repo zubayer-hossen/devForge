@@ -1,9 +1,11 @@
+import { Suspense } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { ArrowLeft } from 'lucide-react';
 import Logo from '../components/ui/Logo';
 import ThemeToggle from '../components/ui/ThemeToggle';
 import { PATHS } from '../constants';
+import PageLoader from '../components/ui/PageLoader';
 
 export default function AuthLayout({ wide = false }) {
   const siteName = useSelector((s) => s.settings.data.siteName);
@@ -15,7 +17,7 @@ export default function AuthLayout({ wide = false }) {
         <ThemeToggle />
       </div>
       <main className="relative z-10 flex flex-1 items-start justify-center px-4 pb-10 pt-4 sm:items-center">
-        <div className={wide ? 'w-full max-w-2xl' : 'w-full max-w-md'}><Outlet /></div>
+        <div className={wide ? 'w-full max-w-2xl' : 'w-full max-w-md'}><Suspense fallback={<PageLoader label="ফর্ম প্রস্তুত হচ্ছে..." />}><Outlet /></Suspense></div>
       </main>
       <div className="relative z-10 pb-6 text-center">
         <Link to={PATHS.home} className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-brand-500 dark:text-slate-400">

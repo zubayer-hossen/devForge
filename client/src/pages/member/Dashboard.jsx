@@ -8,7 +8,6 @@ import Alert from '../../components/ui/Alert';
 import Badge from '../../components/ui/Badge';
 import Avatar from '../../components/ui/Avatar';
 import StatCard from '../../components/ui/StatCard';
-import PageLoader from '../../components/ui/PageLoader';
 import EmptyState from '../../components/common/EmptyState';
 import { memberApi } from '../../api/memberApi';
 import { useFetch } from '../../hooks/useFetch';
@@ -33,12 +32,44 @@ function Section({ icon: Icon, title, to, children }) {
   );
 }
 
+function DashboardSkeleton({ user }) {
+  return (
+    <div className="space-y-6" aria-busy="true" aria-label="ড্যাশবোর্ড লোড হচ্ছে">
+      <div className="flex items-center gap-4">
+        <Avatar user={user} size="lg" />
+        <div className="min-w-0 flex-1">
+          <h1 className="break-words text-2xl font-bold sm:text-3xl">স্বাগতম, {user?.fullName || 'সদস্য'}!</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400">আপনার ড্যাশবোর্ড প্রস্তুত হচ্ছে…</p>
+        </div>
+      </div>
+      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-hidden="true">
+        {Array.from({ length: 8 }, (_, i) => (
+          <Card key={i} className="space-y-3 p-4 sm:p-5">
+            <div className="h-3 w-28 animate-pulse rounded bg-slate-200 dark:bg-navy-700" />
+            <div className="h-8 w-16 animate-pulse rounded bg-slate-200 dark:bg-navy-700" />
+          </Card>
+        ))}
+      </section>
+      <div className="grid gap-4 lg:grid-cols-2" aria-hidden="true">
+        {[0, 1, 2, 3].map((section) => (
+          <Card key={section} className="space-y-4 p-4 sm:p-5">
+            <div className="h-5 w-36 animate-pulse rounded bg-slate-200 dark:bg-navy-700" />
+            {[0, 1, 2].map((line) => (
+              <div key={line} className="h-4 animate-pulse rounded bg-slate-100 dark:bg-navy-800" />
+            ))}
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   usePageTitle('ড্যাশবোর্ড');
   const user = useSelector((s) => s.auth.user);
   const { data, loading, error, reload } = useFetch(() => memberApi.dashboard(), []);
 
-  if (loading && !data) return <PageLoader />;
+  if (loading && !data) return <DashboardSkeleton user={user} />;
   if (error && !data) return <Alert variant="error">{error} <button type="button" onClick={reload} className="font-semibold underline">আবার চেষ্টা করুন</button></Alert>;
 
   const { tasks, upcoming, announcements, resources, submissions, points, streak, leaderboard } = data;

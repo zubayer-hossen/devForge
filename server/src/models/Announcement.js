@@ -16,5 +16,6 @@ const schema = new mongoose.Schema(
 );
 
 schema.index({ title: 'text', body: 'text' });
+schema.index({ status: 1, pinned: -1, publishedAt: -1 });
 
 export default mongoose.model('Announcement', schema);

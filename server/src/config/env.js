@@ -44,7 +44,7 @@ if (!["development", "production", "test"].includes(nodeEnv)) {
 
 const isProd = nodeEnv === "production";
 
-const port = Number(get("PORT", "5000"));
+const port = Number(get("PORT", "5001"));
 
 if (!Number.isInteger(port) || port <= 0 || port > 65535) {
   throw new Error("PORT একটি Valid Port Number হতে হবে।");

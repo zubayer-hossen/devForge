@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Check, Lock } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import Card from '../../components/ui/Card';
@@ -113,6 +113,7 @@ export default function Register() {
   };
 
   return (
+    <MotionConfig reducedMotion="user">
     <Card className="p-5 sm:p-8">
       <h1 className="text-2xl font-bold">DevForge-এ যুক্ত হতে আবেদন করুন</h1>
       <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">ধাপ {step + 1} / {steps.length}: {steps[step].title}</p>
@@ -205,5 +206,6 @@ export default function Register() {
         <Link to={PATHS.login} className="font-semibold text-brand-600 hover:underline dark:text-brand-300">লগইন করুন</Link>
       </p>
     </Card>
+    </MotionConfig>
   );
 }

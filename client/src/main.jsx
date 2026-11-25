@@ -2,7 +2,6 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { MotionConfig } from 'framer-motion';
 import App from './App';
 import ThemedToaster from './components/common/ThemedToaster';
 import { store } from './app/store';
@@ -17,10 +16,8 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <MotionConfig reducedMotion="user">
-          <App />
-          <ThemedToaster />
-        </MotionConfig>
+        <App />
+        <ThemedToaster />
       </BrowserRouter>
     </Provider>
   </StrictMode>

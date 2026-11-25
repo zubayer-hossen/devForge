@@ -7,6 +7,7 @@ const r = Router();
 
 // শুধু প্রকাশ্য তথ্য (পাবলিক ওয়েবসাইট, মেইনটেনেন্স ও রেজিস্ট্রেশন পেজের জন্য)
 r.get('/settings', asyncHandler(async (_req, res) => {
+  res.set('Cache-Control', 'public, max-age=30, stale-while-revalidate=120');
   const s = await getSettings();
   ok(res, {
     siteName: s.siteName, siteDescription: s.siteDescription, logo: s.logo?.url || null,

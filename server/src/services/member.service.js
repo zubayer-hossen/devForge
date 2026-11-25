@@ -1,5 +1,5 @@
 import {
-  User, TaskAssignment, Announcement, Resource, Submission, GroupMembership,
+  User, Task, TaskAssignment, Announcement, Resource, Submission, GroupMembership,
 } from '../models/index.js';
 import { ACCOUNT_STATUS, ROLES } from '../constants/index.js';
 import { uploadBuffer, deleteAsset } from './upload.service.js';
@@ -8,18 +8,60 @@ import { dhakaDay, effectiveCurrent } from './streakRules.js';
 
 export async function getDashboard(user) {
   const now = new Date();
-  const groupIds = (await GroupMembership.find({ user: user._id }).select('group').lean()).map((g) => g.group);
+  const groupIds = (await GroupMembership.find({ user: user._id })
+    .select('group -_id')
+    .lean()).map((g) => g.group);
 
-  const [assignAgg, pendingAssignments, announcements, resources, submissions, ahead, ranked] = await Promise.all([
-    TaskAssignment.aggregate([{ $match: { user: user._id } }, { $group: { _id: '$status', n: { $sum: 1 } } }]),
-    TaskAssignment.find({ user: user._id, status: { $in: ['ASSIGNED', 'IN_PROGRESS'] } })
-      .populate({ path: 'task', match: { status: 'PUBLISHED' }, select: 'title deadline priority category points' })
-      .limit(200).lean(),
+  // Return only the five nearest deadlines and an exact overdue count.
+  // This avoids fetching/populating up to 200 assignment documents into Node.js.
+  const [assignAgg, taskSummaryRows, announcements, resources, submissions, ahead, ranked] = await Promise.all([
+    TaskAssignment.aggregate([
+      { $match: { user: user._id } },
+      { $group: { _id: '$status', n: { $sum: 1 } } },
+    ]),
+    TaskAssignment.aggregate([
+      { $match: { user: user._id, status: { $in: ['ASSIGNED', 'IN_PROGRESS'] } } },
+      {
+        $lookup: {
+          from: Task.collection.name,
+          localField: 'task',
+          foreignField: '_id',
+          as: 'task',
+        },
+      },
+      { $unwind: '$task' },
+      { $match: { 'task.status': 'PUBLISHED' } },
+      {
+        $project: {
+          _id: '$task._id',
+          assignmentId: '$_id',
+          title: '$task.title',
+          deadline: '$task.deadline',
+          priority: '$task.priority',
+          category: '$task.category',
+          points: '$task.points',
+        },
+      },
+      {
+        $facet: {
+          upcoming: [
+            { $match: { deadline: { $gte: now } } },
+            { $sort: { deadline: 1 } },
+            { $limit: 5 },
+          ],
+          overdue: [
+            { $match: { deadline: { $lt: now } } },
+            { $count: 'count' },
+          ],
+          pending: [{ $count: 'count' }],
+        },
+      },
+    ]),
     Announcement.find({
       status: 'PUBLISHED',
       $or: [{ audienceGroups: { $size: 0 } }, { audienceGroups: { $in: groupIds } }],
     }).sort('-pinned -publishedAt').limit(5).select('title body pinned publishedAt').lean(),
-    Resource.find({}).sort('-pinned -createdAt').limit(5).select('title type url pinned file').lean(),
+    Resource.find({}).sort('-pinned -createdAt').limit(5).select('title type url pinned file.url').lean(),
     Submission.find({ user: user._id }).sort('-createdAt').limit(5).select('title status createdAt pointsAwarded').lean(),
     user.role === ROLES.MEMBER
       ? User.countDocuments({ status: ACCOUNT_STATUS.APPROVED, role: ROLES.MEMBER, points: { $gt: user.points } })
@@ -30,18 +72,18 @@ export async function getDashboard(user) {
   const counts = { ASSIGNED: 0, IN_PROGRESS: 0, SUBMITTED: 0, COMPLETED: 0, OVERDUE: 0 };
   assignAgg.forEach((r) => { counts[r._id] = r.n; });
 
-  const open = pendingAssignments.filter((a) => a.task);
-  const withDeadline = open.filter((a) => a.task.deadline);
-  const upcoming = withDeadline.filter((a) => new Date(a.task.deadline) >= now)
-    .sort((a, b) => new Date(a.task.deadline) - new Date(b.task.deadline)).slice(0, 5)
-    .map((a) => ({ assignmentId: a._id, ...a.task }));
-  const overdue = withDeadline.filter((a) => new Date(a.task.deadline) < now).length;
-
+  const taskSummary = taskSummaryRows[0] || { upcoming: [], overdue: [] };
+  const upcoming = taskSummary.upcoming || [];
+  const overdue = taskSummary.overdue?.[0]?.count || 0;
   const total = Object.values(counts).reduce((a, b) => a + b, 0);
+
   return {
     tasks: {
-      assigned: total, completed: counts.COMPLETED, pending: open.length,
-      submitted: counts.SUBMITTED, overdue: Math.max(overdue, counts.OVERDUE),
+      assigned: total,
+      completed: counts.COMPLETED,
+      pending: taskSummary.pending?.[0]?.count || 0,
+      submitted: counts.SUBMITTED,
+      overdue: Math.max(overdue, counts.OVERDUE),
     },
     upcoming,
     announcements,

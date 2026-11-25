@@ -6,7 +6,6 @@ import AuthLayout from '../layouts/AuthLayout';
 import AdminLayout from '../layouts/AdminLayout';
 import MemberLayout from '../layouts/MemberLayout';
 import { GuestRoute, ProtectedRoute } from './guards';
-import PageLoader from '../components/ui/PageLoader';
 import { ADMIN_ROLES, PATHS, STAFF_ROLES, STATUS } from '../constants';
 
 const Landing = lazy(() => import('../pages/public/Landing'));
@@ -63,7 +62,8 @@ function MaintenanceGate({ children }) {
   const { data, loaded } = useSelector((s) => s.settings);
   const user = useSelector((s) => s.auth.user);
   const { pathname } = useLocation();
-  if (!loaded) return <PageLoader />;
+  // Render immediately; enforce maintenance routing after settings arrive.
+  if (!loaded) return children;
   const isAdmin = user && ADMIN_ROLES.includes(user.role);
   if (data.maintenanceMode && !isAdmin && !MAINTENANCE_OK.includes(pathname)) {
     return <Navigate to={PATHS.maintenance} replace />;

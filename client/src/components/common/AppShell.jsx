@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ExternalLink, LogOut, Menu, X } from 'lucide-react';
@@ -10,6 +10,7 @@ import { logoutThunk } from '../../features/auth/authSlice';
 import { PATHS } from '../../constants';
 import { ROLE_LABEL } from '../../utils/labels';
 import { cn } from '../../utils/cn';
+import PageLoader from '../ui/PageLoader';
 
 // অ্যাডমিন ও সদস্য — দুই ড্যাশবোর্ডের সাধারণ কাঠামো: সাইডবার, টপবার, মোবাইল ড্রয়ার
 export default function AppShell({ items, badges = {}, footerLink, outletContext }) {
@@ -86,7 +87,7 @@ export default function AppShell({ items, badges = {}, footerLink, outletContext
           </div>
         </header>
         <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-8">
-          <Outlet context={outletContext} />
+          <Suspense fallback={<PageLoader label="পেজ প্রস্তুত হচ্ছে..." />}><Outlet context={outletContext} /></Suspense>
         </main>
       </div>
     </div>

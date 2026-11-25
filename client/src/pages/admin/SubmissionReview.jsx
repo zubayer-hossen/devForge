@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useOutletContext, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { ArrowLeft, Play } from 'lucide-react';
 import Card from '../../components/ui/Card';
@@ -28,6 +28,7 @@ const DECISIONS = [
 
 export default function SubmissionReview() {
   const { id } = useParams();
+  const { refreshCounts } = useOutletContext();
   const { data, loading, error, reload } = useFetch(() => adminApi.submission(id), [id]);
   const [decision, setDecision] = useState('');
   const [points, setPoints] = useState('0');
@@ -55,6 +56,7 @@ export default function SubmissionReview() {
       toast.success(res.message);
       setConfirm(false); setDecision(''); setFeedback(''); setPoints('0');
       reload();
+      refreshCounts();
     } catch (e) { setConfirm(false); setFormError(getErrorSummary(e)); } finally { setBusy(''); }
   };
 

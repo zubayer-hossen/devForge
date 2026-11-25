@@ -19,6 +19,6 @@ test('regex escape', () => {
 });
 test('ব্যাকঅফ সূত্র email.service.js-এর সঙ্গে সিঙ্কে আছে', () => {
   const src = readFileSync(new URL('../src/services/email/email.service.js', import.meta.url), 'utf8');
-  assert.ok(src.includes('Math.min(BASE_DELAY_MS * 2 ** (attempt - 1), MAX_DELAY_MS)'));
+  assert.ok(src.includes('Math.min(BASE_DELAY_MS * 2 ** (safeAttempt - 1), MAX_DELAY_MS)'));
   assert.ok(src.includes('BASE_DELAY_MS = 30_000') && src.includes('MAX_DELAY_MS = 60 * 60 * 1000'));
 });

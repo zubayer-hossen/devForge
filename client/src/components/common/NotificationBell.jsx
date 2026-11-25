@@ -26,6 +26,7 @@ export default function NotificationBell() {
   const { unread, latest } = useSelector((s) => s.notifications);
   const [open, setOpen] = useState(false);
   const box = useRef(null);
+  const socketConnectedOnce = useRef(false);
 
   const load = useCallback(async () => {
     try {
@@ -45,7 +46,11 @@ export default function NotificationBell() {
 
   useEffect(() => connectNotificationSocket({
     onNotification: (n) => dispatch(pushNotification(n)),
-    onConnect: load, // পুনঃসংযোগে মিস হওয়া নোটিফিকেশন ধরে নেয়
+    onConnect: () => {
+      // প্রথম snapshot ইতিমধ্যে load() করেছে; শুধু reconnect হলে missed items sync করি।
+      if (socketConnectedOnce.current) load();
+      socketConnectedOnce.current = true;
+    },
   }), [dispatch, load]);
 
   useEffect(() => {

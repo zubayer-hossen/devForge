@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import {
   ArrowRight, ClipboardList, Code2, GitBranch, Library, Lock, MessageSquare,
@@ -42,29 +41,25 @@ export default function Landing() {
         <div className="pointer-events-none absolute -left-24 top-24 h-72 w-72 rounded-full bg-brand-500/20 blur-3xl" aria-hidden="true" />
         <div className="pointer-events-none absolute -right-24 top-40 h-72 w-72 rounded-full bg-electric-500/20 blur-3xl" aria-hidden="true" />
         <div className="relative mx-auto max-w-5xl px-4 pb-20 pt-16 text-center sm:pb-28 sm:pt-24">
-          <motion.p
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-4 py-1.5 text-sm font-medium text-brand-600 dark:text-brand-300"
+          <p
+            className="animate-fade-up mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-4 py-1.5 text-sm font-medium text-brand-600 dark:text-brand-300"
           >
             <Lock className="h-4 w-4" aria-hidden="true" /> শুধু নির্বাচিত ক্লাসমেটদের প্রাইভেট কমিউনিটি
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}
-            className="text-4xl font-extrabold leading-tight sm:text-6xl"
+          </p>
+          <h1
+            className="animate-fade-up [animation-delay:80ms] text-4xl font-extrabold leading-tight sm:text-6xl"
           >
             একসঙ্গে শিখুন, <br className="hidden sm:block" />
             <span className="bg-brand-gradient bg-clip-text text-transparent">একসঙ্গে গড়ুন</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}
-            className="mx-auto mt-6 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg"
+          </h1>
+          <p
+            className="animate-fade-up [animation-delay:140ms] mx-auto mt-6 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg"
           >
             DevForge হলো ডেডিকেটেড ডেভেলপারদের শেখা ও সহযোগিতার জায়গা। এখানে নিয়মিত টাস্ক, বাস্তব প্রজেক্ট, কোড রিভিউ এবং
             একে অপরকে এগিয়ে নেওয়ার সংস্কৃতি গড়ে ওঠে।
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}
-            className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
+          </p>
+          <div
+            className="animate-fade-up [animation-delay:200ms] mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
           >
             {user ? (
               <Button to={homeForUser(user)} size="lg">আমার পেজে যান <ArrowRight className="h-5 w-5" aria-hidden="true" /></Button>
@@ -74,7 +69,7 @@ export default function Landing() {
                 <Button to={PATHS.login} variant="secondary" size="lg">লগইন করুন</Button>
               </>
             )}
-          </motion.div>
+          </div>
           {!user && !registrationOpen && (
             <p className="mt-4 text-sm text-amber-600 dark:text-amber-400">এই মুহূর্তে নতুন আবেদন গ্রহণ বন্ধ আছে।</p>
           )}
@@ -82,7 +77,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:py-20" aria-labelledby="features-title">
+      <section className="defer-render mx-auto max-w-6xl px-4 py-16 sm:py-20" aria-labelledby="features-title">
         <Reveal className="mx-auto max-w-2xl text-center">
           <h2 id="features-title" className="text-2xl font-bold sm:text-4xl">শেখার জন্য যা যা দরকার</h2>
           <p className="mt-3 text-slate-600 dark:text-slate-400">এলোমেলো গ্রুপ চ্যাটের বদলে একটি গোছানো প্ল্যাটফর্ম।</p>
@@ -102,7 +97,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="border-y border-slate-200 bg-white/50 py-16 dark:border-white/10 dark:bg-navy-950/40 sm:py-20" aria-labelledby="steps-title">
+      <section className="defer-render border-y border-slate-200 bg-white/50 py-16 dark:border-white/10 dark:bg-navy-950/40 sm:py-20" aria-labelledby="steps-title">
         <div className="mx-auto max-w-6xl px-4">
           <Reveal className="mx-auto max-w-2xl text-center">
             <h2 id="steps-title" className="text-2xl font-bold sm:text-4xl">যুক্ত হবেন যেভাবে</h2>
@@ -123,7 +118,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-4 py-16 text-center sm:py-20" aria-labelledby="stack-title">
+      <section className="defer-render mx-auto max-w-4xl px-4 py-16 text-center sm:py-20" aria-labelledby="stack-title">
         <Reveal>
           <h2 id="stack-title" className="text-2xl font-bold sm:text-3xl">যা যা নিয়ে আমরা কাজ করি</h2>
           <ul className="mt-8 flex flex-wrap justify-center gap-2.5">
@@ -137,7 +132,7 @@ export default function Landing() {
       </section>
 
       {!user && (
-        <section className="px-4 pb-20">
+        <section className="defer-render px-4 pb-20">
           <Reveal>
             <div className="relative mx-auto max-w-4xl overflow-hidden rounded-3xl bg-brand-gradient p-8 text-center shadow-glow sm:p-14">
               <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 animate-float rounded-full bg-white/10 blur-2xl" aria-hidden="true" />

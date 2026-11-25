@@ -7,8 +7,8 @@ import { homeForUser } from '../utils/routing';
 // লগইন করা থাকলে লগইন/রেজিস্টার পেজ দেখাবে না
 export function GuestRoute() {
   const { user, checked } = useSelector((s) => s.auth);
-  if (!checked) return <PageLoader />;
-  if (user) return <Navigate to={homeForUser(user)} replace />;
+  // Render guest UI immediately; redirect only after the session check completes.
+  if (checked && user) return <Navigate to={homeForUser(user)} replace />;
   return <Outlet />;
 }
 

@@ -17,5 +17,6 @@ const schema = new mongoose.Schema(
 );
 
 schema.index({ title: 'text', description: 'text', tags: 'text' });
+schema.index({ pinned: -1, createdAt: -1 });
 
 export default mongoose.model('Resource', schema);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Menu, X } from 'lucide-react';
@@ -8,6 +8,7 @@ import ThemeToggle from '../components/ui/ThemeToggle';
 import { PATHS } from '../constants';
 import { homeForUser } from '../utils/routing';
 import { cn } from '../utils/cn';
+import PageLoader from '../components/ui/PageLoader';
 
 const links = [
   { to: PATHS.home, label: 'হোম', end: true },
@@ -70,7 +71,7 @@ export default function PublicLayout() {
         )}
       </header>
 
-      <main className="flex-1"><Outlet /></main>
+      <main className="flex-1"><Suspense fallback={<PageLoader label="পেজ প্রস্তুত হচ্ছে..." />}><Outlet /></Suspense></main>
 
       <footer className="border-t border-slate-200 bg-white/60 dark:border-white/10 dark:bg-navy-950/60">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-3">

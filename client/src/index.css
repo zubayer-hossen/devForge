@@ -12,3 +12,16 @@
   ::selection { @apply bg-brand-500/30; }
   :focus-visible { @apply outline-none ring-2 ring-brand-400 ring-offset-2 ring-offset-white dark:ring-offset-navy-900; }
 }
+
+/* Lightweight entrance effects; respects the visitor's reduced-motion setting. */
+@keyframes devforge-fade-up {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.animate-fade-up,
+.reveal-fade { animation: devforge-fade-up 420ms cubic-bezier(.2,.7,.2,1) both; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-fade-up, .reveal-fade, .animate-pulse { animation: none !important; opacity: 1; transform: none; }
+}
+.defer-render { content-visibility: auto; contain-intrinsic-size: auto 700px; }
